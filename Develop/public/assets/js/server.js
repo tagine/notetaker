@@ -9,8 +9,8 @@ const app = require("./assets/js/app.js");
 // EXPRESS CONFIGURATION
 // This sets up the basic properties for our express server
 // ==============================================================================
-// Tells node that we are creating an "express" server
-// Sets an initial port. We"ll use this later in our listener
+// Cerating express server
+// Port setup
 var app = express();
 var PORT = process.env.PORT || 8080;
 // Sets up the Express app to handle data parsing
