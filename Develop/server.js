@@ -2,9 +2,10 @@
 // DEPENDENCIES
 // Series of npm packages that we will use to give our server useful functionality
 // ==============================================================================
+const fs = require("fs");
 const express = require("express");
 var path = require("path");
-const app = require("./assets/js/app.js");
+// const app = require("./assets/js/app.js");
 // ==============================================================================
 // EXPRESS CONFIGURATION
 // This sets up the basic properties for our express server
@@ -36,6 +37,14 @@ app.post("/api/notes", function(req, res) {
 // LISTENER
 // The below code effectively "starts" our server
 // =============================================================================
+console.log("Server is starting...")
 app.listen(PORT, function() {
     console.log("App listening on PORT: " + PORT);
 });
+
+fs.writeFile("db.json", data, (err) => {
+    if (err) throw err;
+    console.log("Congrats! The file has been saved!");
+  });
+
+  
