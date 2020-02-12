@@ -156,7 +156,7 @@ document.addEventListener("DOMcontentLoaded", () => {
 )
 
 // Gets notes from the db and renders them to the sidebar
-var getAndRenderNotes = function() {
+const getAndRenderNotes = function() {
   return getNotes().then(function(data) {
     renderNoteList(data);
   });
