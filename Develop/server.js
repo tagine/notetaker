@@ -4,7 +4,8 @@
 // ==============================================================================
 const fs = require("fs");
 const express = require("express");
-var path = require("path");
+const path = require("path");
+
 // const app = require("./assets/js/app.js");
 // ==============================================================================
 // EXPRESS CONFIGURATION
@@ -12,11 +13,12 @@ var path = require("path");
 // ==============================================================================
 // Cerating express server
 // Port setup
-var app = express();
-var PORT = process.env.PORT || 8080;
+const app = express();
+const PORT = process.env.PORT || 8080;
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static("public"));
 // ================================================================================
 // ROUTER
 // The below points our server to a series of "route" files.
@@ -28,11 +30,38 @@ app.get("/", function(req, res) {
 app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
+
+app.get("/readnotes", function(req, res) {
+    try {
+        let results = fs.readFileSync("db/db.json", 'utf8')
+        console.log(results)
+      } catch (err) {
+        console.error(err)
+      }
+    res.json(notes);
+  });
+
+// app.post("/api/notes", function(req, res) {
+//     var newNote = req.body;
+//     notes.push(newNote);
+//     db.json(newNote);
+// });
+
 app.post("/api/notes", function(req, res) {
-    var newNote = req.body;
-    reservations.push(newNote);
-    db.json(newNote);
-});
+    // req.body hosts is equal to the JSON post sent from the user
+    // This works because of our body parsing middleware
+    var notes = req.body;
+    console.log(notes);
+    try {
+        fs.appendFileSync("./db/db.json", JSON.stringify(notes))
+      } catch (err) {
+        console.error(err)
+      }
+    res.json(notes);
+  });
+
+
+
 // =============================================================================
 // LISTENER
 // The below code effectively "starts" our server
@@ -42,9 +71,14 @@ app.listen(PORT, function() {
     console.log("App listening on PORT: " + PORT);
 });
 
-fs.writeFile("db.json", data, (err) => {
-    if (err) throw err;
-    console.log("Congrats! The file has been saved!");
-  });
+// =============================================================================
+// WRITE FILE METHOD
+// Writes user input into JSON file (database) db.json
+// =============================================================================
+
+// fs.writeFile("db.json", data, (err) => {
+//     if (err) throw err;
+//     console.log("Congrats! User input has been saved in db.json!");
+//   });
 
   

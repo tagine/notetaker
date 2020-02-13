@@ -1,5 +1,8 @@
 console.log("I exist!")
 
+$( document ).ready(function() {
+  console.log( "ready!" );
+
 const $noteTitle = $(".note-title");
 const $noteText = $(".note-textarea");
 const $saveNoteBtn = $(".save-note");
@@ -12,7 +15,7 @@ let activeNote = {};
 // A function for getting all notes from the db
 const getNotes = function() {
   return $.ajax({
-    url: "/api/notes",
+    url: "/notes",
     method: "GET"
   });
 };
@@ -127,27 +130,27 @@ const renderNoteList = function(notes) {
   $noteList.append(noteListItems);
 };
 
-$(".save-note").on("click", function() {
-  const saveNoteTitle = $(".note-title").val().trim();
-  const saveNoteText = $(".note-textarea").val().trim();
+// $(".save-note").on("click", function() {
+//   let saveNoteTitle = $(".note-title").val().trim();
+//   let saveNoteText = $(".note-textarea").val().trim();
 
-  // Using a RegEx Pattern to remove spaces
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  saveNoteTitle = saveNoteTitle.replace(/\s+/g, "").toLowerCase();
-  saveNoteText = saveNoteText.replace(/\s+/g, "").toLowerCase();
+//   // Using a RegEx Pattern to remove spaces
+//   // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
+//   saveNoteTitle = saveNoteTitle.replace(/\s+/g, "").toLowerCase();
+//   saveNoteText = saveNoteText.replace(/\s+/g, "").toLowerCase();
 
-  // QUESTION: What does $.get do? What are the parameters it is expecting?
-  $.get("/api/characters/" + savedNoteText, function(data) {
-    console.log(data);
-    if (data) {
-      $(".note-title").text(data.title);
-      $(".note-textarea").text(data.text);
-    }
-    else {
-      $("#name").text("No note was not found.");
-    }
-  });
-});
+//   // QUESTION: What does $.get do? What are the parameters it is expecting?
+//   $.get("/api/notes" + saveNoteText, function(data) {
+//     console.log(data);
+//     if (data) {
+//       $(".note-title").text(data.title);
+//       $(".note-textarea").text(data.text);
+//     }
+//     else {
+//       $("#name").text("No note was not found.");
+//     }
+//   });
+// });
 
 document.addEventListener("DOMcontentLoaded", () => {
   document.getElementById("btn").addEventListener("click", saveNoteTitle),
@@ -171,3 +174,45 @@ $noteText.on("keyup", handleRenderSaveBtn);
 
 // Gets and renders the initial list of notes
 getAndRenderNotes();
+
+//PARSE BEFORE INTEGRATING
+$(".save-note").on("click", function() {
+  let saveNoteTitle = $(".note-title").val().trim();
+  let saveNoteText = $(".note-textarea").val().trim();
+  console.log(saveNoteTitle, saveNoteText)
+
+  // Using a RegEx Pattern to remove spaces
+  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
+  saveNoteTitle = saveNoteTitle.replace(/\s+/g, "").toLowerCase();
+  saveNoteText = saveNoteText.replace(/\s+/g, "").toLowerCase();
+
+  // document.addEventListener("DOMcontentLoaded"), () => {
+  //   document.getElementById("btn").addEventListener("click", saveNoteTitle),
+  //   document.getElementById("btn").addEventListener("click", saveNoteText);
+  // },
+
+    // QUESTION: What does $.get do? What are the parameters it is expecting?
+    // $.get("/api/notes/" + saveNoteText, function(data) {
+    //   console.log(data);
+    //   if (data) {
+    //     $(".note-title").text(data.title);
+    //     $(".note-textarea").text(data.text);
+    //   }
+    //   else {
+    //     $("#name").text("No note was not found.");
+    //   }})
+    let note = {"Title":saveNoteTitle,"Text":saveNoteText}
+
+    $.post("/api/notes", note)
+    .then(function(data) {
+     console.log("saved");
+
+     $.get("/readNotes/", function(data) {
+      console.log(data);
+    });
+
+    });
+
+    })
+
+  });
