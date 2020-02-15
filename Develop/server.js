@@ -15,7 +15,7 @@ const shortid = require("shortid");
 // Cerating express server
 // Port setup
 const app = express();
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 8080;
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -36,7 +36,7 @@ app.get("/api/notes", function(req, res) {
     let results;
     try {
         results = JSON.parse(fs.readFileSync("db/db.json", 'utf8'))
-        //console.log(results)
+        console.log(results)
     } catch (err) {
         console.error(err)
     }
@@ -63,7 +63,7 @@ app.post("/api/notes", function(req, res) {
     }
     try {
         let oldFile = JSON.parse(fs.readFileSync("db/db.json", 'utf8'))
-        oldFile.push(notes)
+        oldFile.data.push(notes)
         fs.writeFileSync("./db/db.json", JSON.stringify(oldFile))
       } catch (err) {
         console.error(err)
