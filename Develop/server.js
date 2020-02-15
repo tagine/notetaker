@@ -86,7 +86,7 @@ app.post("/api/notes", function(req, res) {
     try {
         let oldFile = JSON.parse(fs.readFileSync("db/db.json", 'utf8'))
         oldFile.push(notes)
-        fs.writeFileSync("./db/db.json", JSON.stringify(oldFile))
+        fs.deleteFileSync("./db/db.json", JSON.stringify(oldFile))
       } catch (err) {
         console.error(err)
       }

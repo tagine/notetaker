@@ -16,4 +16,4 @@ For users that need to keep track of a lot of information, it's easy to forget o
 
 ## Deployed app
 
-The app is deployed to https://git.heroku.com/notetakertagine.git 
+The app is deployed to https://git.heroku.com/notetakertagine.git
