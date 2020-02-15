@@ -5,6 +5,7 @@
 const fs = require("fs");
 const express = require("express");
 const path = require("path");
+const shortid = require("shortid");
 
 // const app = require("./assets/js/app.js");
 // ==============================================================================
@@ -14,7 +15,7 @@ const path = require("path");
 // Cerating express server
 // Port setup
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 80;
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -31,14 +32,15 @@ app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
-app.get("/readnotes", function(req, res) {
+app.get("/api/notes", function(req, res) {
+    let results;
     try {
-        let results = fs.readFileSync("db/db.json", 'utf8')
-        console.log(results)
-      } catch (err) {
+        results = JSON.parse(fs.readFileSync("db/db.json", 'utf8'))
+        //console.log(results)
+    } catch (err) {
         console.error(err)
-      }
-    res.json(notes);
+    }
+    res.json(results);
   });
 
 // app.post("/api/notes", function(req, res) {
@@ -51,9 +53,40 @@ app.post("/api/notes", function(req, res) {
     // req.body hosts is equal to the JSON post sent from the user
     // This works because of our body parsing middleware
     var notes = req.body;
-    console.log(notes);
+    var title = req.body.title;
+    var text = req.body.text;
+    var id = shortid.generate();
+    var notes = {
+        id: id,
+        title: title,
+        text: text
+    }
     try {
-        fs.appendFileSync("./db/db.json", JSON.stringify(notes))
+        let oldFile = JSON.parse(fs.readFileSync("db/db.json", 'utf8'))
+        oldFile.push(notes)
+        fs.writeFileSync("./db/db.json", JSON.stringify(oldFile))
+      } catch (err) {
+        console.error(err)
+      }
+    res.json(notes);
+  });
+
+  app.delete("/api/notes", function(req, res) {
+    // req.body hosts is equal to the JSON post sent from the user
+    // This works because of our body parsing middleware
+    var notes = req.body;
+    var title = req.body.title;
+    var text = req.body.text;
+    var id = shortid.generate();
+    var notes = {
+        id: id,
+        title: title,
+        text: text
+    }
+    try {
+        let oldFile = JSON.parse(fs.readFileSync("db/db.json", 'utf8'))
+        oldFile.push(notes)
+        fs.writeFileSync("./db/db.json", JSON.stringify(oldFile))
       } catch (err) {
         console.error(err)
       }

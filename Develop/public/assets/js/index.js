@@ -1,27 +1,22 @@
-console.log("I exist!")
-
-$( document ).ready(function() {
-  console.log( "ready!" );
-
-const $noteTitle = $(".note-title");
-const $noteText = $(".note-textarea");
-const $saveNoteBtn = $(".save-note");
-const $newNoteBtn = $(".new-note");
-const $noteList = $(".list-container .list-group");
+var $noteTitle = $(".note-title");
+var $noteText = $(".note-textarea");
+var $saveNoteBtn = $(".save-note");
+var $newNoteBtn = $(".new-note");
+var $noteList = $(".list-container .list-group");
 
 // activeNote is used to keep track of the note in the textarea
-let activeNote = {};
+var activeNote = {};
 
 // A function for getting all notes from the db
-const getNotes = function() {
+var getNotes = function() {
   return $.ajax({
-    url: "/notes",
+    url: "/api/notes",
     method: "GET"
   });
 };
 
 // A function for saving a note to the db
-const saveNote = function(note) {
+var saveNote = function(note) {
   return $.ajax({
     url: "/api/notes",
     data: note,
@@ -30,7 +25,7 @@ const saveNote = function(note) {
 };
 
 // A function for deleting a note from the db
-const deleteNote = function(id) {
+var deleteNote = function(id) {
   return $.ajax({
     url: "api/notes/" + id,
     method: "DELETE"
@@ -38,7 +33,7 @@ const deleteNote = function(id) {
 };
 
 // If there is an activeNote, display it, otherwise render empty inputs
-const renderActiveNote = function() {
+var renderActiveNote = function() {
   $saveNoteBtn.hide();
 
   if (activeNote.id) {
@@ -55,7 +50,7 @@ const renderActiveNote = function() {
 };
 
 // Get the note data from the inputs, save it to the db and update the view
-const handleNoteSave = function() {
+var handleNoteSave = function() {
   var newNote = {
     title: $noteTitle.val(),
     text: $noteText.val()
@@ -68,11 +63,11 @@ const handleNoteSave = function() {
 };
 
 // Delete the clicked note
-const handleNoteDelete = function(event) {
+var handleNoteDelete = function(event) {
   // prevents the click listener for the list from being called when the button inside of it is clicked
   event.stopPropagation();
 
-  const note = $(this)
+  var note = $(this)
     .parent(".list-group-item")
     .data();
 
@@ -87,13 +82,13 @@ const handleNoteDelete = function(event) {
 };
 
 // Sets the activeNote and displays it
-const handleNoteView = function() {
+var handleNoteView = function() {
   activeNote = $(this).data();
   renderActiveNote();
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
-const handleNewNoteView = function() {
+var handleNewNoteView = function() {
   activeNote = {};
   renderActiveNote();
 };
@@ -109,10 +104,10 @@ var handleRenderSaveBtn = function() {
 };
 
 // Render's the list of note titles
-const renderNoteList = function(notes) {
+var renderNoteList = function(notes) {
   $noteList.empty();
 
-  const noteListItems = [];
+  var noteListItems = [];
 
   for (var i = 0; i < notes.length; i++) {
     var note = notes[i];
@@ -130,36 +125,8 @@ const renderNoteList = function(notes) {
   $noteList.append(noteListItems);
 };
 
-// $(".save-note").on("click", function() {
-//   let saveNoteTitle = $(".note-title").val().trim();
-//   let saveNoteText = $(".note-textarea").val().trim();
-
-//   // Using a RegEx Pattern to remove spaces
-//   // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-//   saveNoteTitle = saveNoteTitle.replace(/\s+/g, "").toLowerCase();
-//   saveNoteText = saveNoteText.replace(/\s+/g, "").toLowerCase();
-
-//   // QUESTION: What does $.get do? What are the parameters it is expecting?
-//   $.get("/api/notes" + saveNoteText, function(data) {
-//     console.log(data);
-//     if (data) {
-//       $(".note-title").text(data.title);
-//       $(".note-textarea").text(data.text);
-//     }
-//     else {
-//       $("#name").text("No note was not found.");
-//     }
-//   });
-// });
-
-document.addEventListener("DOMcontentLoaded", () => {
-  document.getElementById("btn").addEventListener("click", saveNoteTitle),
-  document.getElementById("btn").addEventListener("click", saveNoteText);
-}
-)
-
 // Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = function() {
+var getAndRenderNotes = function() {
   return getNotes().then(function(data) {
     renderNoteList(data);
   });
@@ -174,45 +141,3 @@ $noteText.on("keyup", handleRenderSaveBtn);
 
 // Gets and renders the initial list of notes
 getAndRenderNotes();
-
-//PARSE BEFORE INTEGRATING
-$(".save-note").on("click", function() {
-  let saveNoteTitle = $(".note-title").val().trim();
-  let saveNoteText = $(".note-textarea").val().trim();
-  console.log(saveNoteTitle, saveNoteText)
-
-  // Using a RegEx Pattern to remove spaces
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  saveNoteTitle = saveNoteTitle.replace(/\s+/g, "").toLowerCase();
-  saveNoteText = saveNoteText.replace(/\s+/g, "").toLowerCase();
-
-  // document.addEventListener("DOMcontentLoaded"), () => {
-  //   document.getElementById("btn").addEventListener("click", saveNoteTitle),
-  //   document.getElementById("btn").addEventListener("click", saveNoteText);
-  // },
-
-    // QUESTION: What does $.get do? What are the parameters it is expecting?
-    // $.get("/api/notes/" + saveNoteText, function(data) {
-    //   console.log(data);
-    //   if (data) {
-    //     $(".note-title").text(data.title);
-    //     $(".note-textarea").text(data.text);
-    //   }
-    //   else {
-    //     $("#name").text("No note was not found.");
-    //   }})
-    let note = {"Title":saveNoteTitle,"Text":saveNoteText}
-
-    $.post("/api/notes", note)
-    .then(function(data) {
-     console.log("saved");
-
-     $.get("/readNotes/", function(data) {
-      console.log(data);
-    });
-
-    });
-
-    })
-
-  });
