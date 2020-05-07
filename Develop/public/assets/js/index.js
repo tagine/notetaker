@@ -16,7 +16,7 @@ var getNotes = function() {
 };
 
 // A function for saving a note to the db
-var saveNote = function(note) {
+const saveNote = function(note) {
   return $.ajax({
     url: "/api/notes",
     data: note,
@@ -55,6 +55,8 @@ var handleNoteSave = function() {
     title: $noteTitle.val(),
     text: $noteText.val()
   };
+
+  console.log(newNote);
 
   saveNote(newNote).then(function(data) {
     getAndRenderNotes();
@@ -97,9 +99,9 @@ var handleNewNoteView = function() {
 // Or else show it
 var handleRenderSaveBtn = function() {
   if (!$noteTitle.val().trim() || !$noteText.val().trim()) {
-    $saveNoteBtn.hide();
-  } else {
     $saveNoteBtn.show();
+  } else {
+    $saveNoteBtn.hide();
   }
 };
 
@@ -121,7 +123,7 @@ var renderNoteList = function(notes) {
     $li.append($span, $delBtn);
     noteListItems.push($li);
   }
-
+console.log(noteListItems);
   $noteList.append(noteListItems);
 };
 
@@ -137,7 +139,7 @@ $noteList.on("click", ".list-group-item", handleNoteView);
 $newNoteBtn.on("click", handleNewNoteView);
 $noteList.on("click", ".delete-note", handleNoteDelete);
 $noteTitle.on("keyup", handleRenderSaveBtn);
-$noteText.on("keyup", handleRenderSaveBtn);
+$noteText.on("click", handleRenderSaveBtn);
 
 // Gets and renders the initial list of notes
 getAndRenderNotes();

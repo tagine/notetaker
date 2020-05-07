@@ -9,8 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "mysql": "^2.16.0",
-    "shortid": "^2.2.15"
+    "shortid": "^2.2.15",
+    "uuid": "^8.0.0",
+    "uuidv4": "^6.0.8"
   }
 }
